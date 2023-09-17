@@ -39,8 +39,6 @@ public class Clothes extends MDMAEntity{
     private Date releaseDate;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @Column(name = "main_path")
-    private String mainPath;
     @ElementCollection
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
     @MapKeyColumn(name = "media_path")
