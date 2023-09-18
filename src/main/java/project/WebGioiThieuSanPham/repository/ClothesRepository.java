@@ -21,6 +21,8 @@
         Page<Clothes> findByCategory(UUID category, PageRequest pageRequest);
         List<Clothes> findByCategoryId(UUID categoryId);
 
+        boolean existsByName(String clothesName);
+
 
 //        @Query("SELECT c FROM Clothes c " +
 //                "WHERE (:category IS NULL OR c.category = :category) " +

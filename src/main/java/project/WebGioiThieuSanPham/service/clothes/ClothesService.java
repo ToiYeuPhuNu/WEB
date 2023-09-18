@@ -20,7 +20,7 @@ public interface ClothesService {
     public ClothesDetailView getClothesById(UUID id);
     public Page<ClothesAvatarView> getAllClothes(int page);
     public Page<ClothesAvatarView> getlothesByCategory(UUID category,int page);
-
+    public ClothesDetailView createClothes(ClothesDetailView clothesDetailView);
 
     List<Clothes> getlothesByCategory(UUID categoryId);
 }

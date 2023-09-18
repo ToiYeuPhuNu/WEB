@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
+import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
@@ -31,6 +32,7 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public ClothesDetailView updateClothes(UUID id, ClothesDetailView clothesDetailView) {
+
         Clothes existingClothes = clothesRepository.findById(id).orElseThrow(()-> new RuntimeException("Clothes not found"));
         existingClothes = clothesMapper.updateClothesFromClothesDetail(clothesDetailView, clothesDetailView.getCategory());
         existingClothes = clothesRepository.save(existingClothes);
@@ -69,6 +71,29 @@ public class ClothesServiceImpl implements ClothesService {
         //chuyển đổi trang sp clothes thành clothesAvatrView
         Page<ClothesAvatarView> clothesAvatarViewPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
         return clothesAvatarViewPage;
+    }
+
+    @Override
+    public ClothesDetailView createClothes(ClothesDetailView clothesDetailView) {
+        String clothesName = clothesDetailView.getName();
+        if (clothesRepository.existsByName(clothesName)) {
+            throw new RuntimeException("Tên sản phẩm đã tồn tại.");
+        }
+        // Kiểm tra tính hợp lệ của tên sản phẩm
+        if (clothesName == null || clothesName.trim().isEmpty()) {
+            throw new RuntimeException("Tên sản phẩm không hợp lệ.");
+        }
+        Category category = categoryRepository.findByName(clothesDetailView.getCategory())
+                .orElseGet(()-> {
+                    Category newCategory = new Category();
+                    newCategory.setName(clothesDetailView.getCategory());
+                    return categoryRepository.save(newCategory);
+                });
+        Clothes clothes = clothesMapper.clothesDetailToClothes(clothesDetailView);
+        clothes.setCategories((List<Category>) category);
+        clothes = clothesRepository.save(clothes);
+        return clothesMapper.ClothesToClothesDetail(clothes);
+
     }
 
     @Override
