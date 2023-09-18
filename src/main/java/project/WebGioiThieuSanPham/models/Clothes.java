@@ -20,13 +20,6 @@ import java.util.*;
 @AllArgsConstructor
 @Table(name = "clothes")
 public class Clothes extends MDMAEntity{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "uuid")
-    protected UUID id;
-    @Column(unique = true)
-    @Pattern(regexp = "^[A-Z]+$", message = "Tên không hợp lệ")
-    private String name;
     //đánh dấu kiểu dữ liệu của trường Sex là một enum với tên được lưu trữ trong db
     @Enumerated(EnumType.STRING)
     private Sex sex;
