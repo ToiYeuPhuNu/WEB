@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.enums.Status;
+import project.WebGioiThieuSanPham.models.CategoryChild;
 
 
 import java.math.BigDecimal;
@@ -20,20 +21,9 @@ import java.math.BigDecimal;
 public class FilterRequest {
     private String name;
     private Sex sex;
-    private String color;
-    private String Category;
+    private CategoryChild categoryChild;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
 
-    @Override
-    public String toString() {
-        return "FilterRequest{" +
-                "name='" + name + '\'' +
-                ", sex=" + sex +
-                ", color='" + color + '\'' +
-                ", Category='" + Category + '\'' +
-                ", minPrice=" + minPrice +
-                ", maxPrice=" + maxPrice +
-                '}';
-    }
+
 }

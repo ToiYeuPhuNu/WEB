@@ -18,8 +18,15 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "clothes")
-public class Clothes extends MDMAEntity{
-
+public class Clothes{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "uuid")
+    protected UUID id;
+    @Column(unique = true)
+    private String name;
+    @Column(name = "category")
+    private String category;
     //đánh dấu kiểu dữ liệu của trường Sex là một enum với tên được lưu trữ trong db
     @Enumerated(EnumType.STRING)
     private Sex sex;
@@ -45,9 +52,6 @@ public class Clothes extends MDMAEntity{
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
     @MapKeyColumn(name = "media_path")
     List<String> MediaPath = new ArrayList<>();
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private CategoryChild categoryChild;
         public void updateStatus() {
             // Kiểm tra xem tất cả các kích cỡ có bằng 0 hoặc null không
             boolean allSizesZeroOrNull = sizesStock.values().stream()

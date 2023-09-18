@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public interface ClothesMapper {
 
-     Clothes toEntity(FilterRequest filterRequest);
      ClothesDetailView toDao(Clothes clothes);
      List<ClothesAvatarView> toListDao(Clothes clothes);
 
