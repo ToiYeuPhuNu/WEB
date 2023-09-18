@@ -1,9 +1,12 @@
 package project.WebGioiThieuSanPham.service.clothes;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.FilterRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.models.Clothes;
 
@@ -13,11 +16,12 @@ import java.util.UUID;
 
 public interface ClothesService {
 
-    Clothes add(Clothes clothes);
+    public ClothesDetailView updateClothes(UUID id, ClothesDetailView clothesDetailView);
+    public void deleteClothes(UUID id);
+    public ClothesDetailView getClothesById(UUID id);
+    public Page<ClothesAvatarView> getAllClothes(int page);
+    public Page<ClothesAvatarView> getlothesByCategory(UUID category,int page);
+    public ClothesDetailView createClothes(ClothesRequest clothesRequest);
 
-    Clothes getById(UUID id);
-
-//    public List<Clothes> getAllClothes(Clothes clothes);
-
-//    Page<ClothesAvatarView> filterClothes(FilterRequest filterRequest, Pageable pageable);
+    List<Clothes> getlothesByCategory(UUID categoryId);
 }

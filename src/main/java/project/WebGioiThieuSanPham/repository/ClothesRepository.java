@@ -1,6 +1,7 @@
     package project.WebGioiThieuSanPham.repository;
 
     import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
     import org.springframework.data.domain.Pageable;
     import org.springframework.data.jpa.repository.JpaRepository;
     import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,10 +12,16 @@
     import project.WebGioiThieuSanPham.models.Clothes;
 
     import java.math.BigDecimal;
+    import java.util.List;
     import java.util.UUID;
     @Repository
     public interface ClothesRepository extends JpaRepository<Clothes, UUID>, JpaSpecificationExecutor<Clothes> {
         Clothes findClothesByName(String name);
+
+        Page<Clothes> findByCategory(UUID category, PageRequest pageRequest);
+        List<Clothes> findByCategoryId(UUID categoryId);
+
+        boolean existsByName(String clothesName);
 
 
 //        @Query("SELECT c FROM Clothes c " +
