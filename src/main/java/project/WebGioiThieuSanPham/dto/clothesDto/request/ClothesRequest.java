@@ -26,7 +26,7 @@ public class ClothesRequest {
     private BigDecimal price;
     private String description;
     private Date releaseDate;
-    private Status status;
+    private String status;
     private String mainPath;
     private List<Category> categories;
     List<String> MediaPath = new ArrayList<>();

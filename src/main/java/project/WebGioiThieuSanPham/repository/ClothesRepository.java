@@ -18,7 +18,7 @@
     public interface ClothesRepository extends JpaRepository<Clothes, UUID>, JpaSpecificationExecutor<Clothes> {
         Clothes findClothesByName(String name);
 
-        Page<Clothes> findByCategory(UUID category, PageRequest pageRequest);
+        Page<Clothes> findByCategory(UUID categoryId, Pageable pageable);
         List<Clothes> findByCategoryId(UUID categoryId);
 
         boolean existsByName(String clothesName);

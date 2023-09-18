@@ -7,6 +7,7 @@ import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.FilterRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
 import project.WebGioiThieuSanPham.models.Clothes;
 
 import java.util.List;
@@ -22,5 +23,7 @@ public interface ClothesMapper {
      ClothesDetailView ClothesToClothesDetail(Clothes clothes);
      ClothesAvatarView ClothesToClothesAvatar(Clothes clothes);
      Clothes clothesAvatarToClothes(ClothesAvatarView clothesAvatarView);
+     ClothesResponse ClothesToClothesResponse(Clothes clothes);
 
+     Clothes updateClothesFromClothesResponse();
 }
