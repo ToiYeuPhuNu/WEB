@@ -1,4 +1,4 @@
-package project.WebGioiThieuSanPham.service;
+package project.WebGioiThieuSanPham.service.clothes;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

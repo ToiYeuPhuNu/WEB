@@ -18,15 +18,13 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "clothes")
-public class Clothes{
+public class Clothes extends MDMAEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "uuid")
     protected UUID id;
     @Column(unique = true)
     private String name;
-    @Column(name = "category")
-    private String category;
     //đánh dấu kiểu dữ liệu của trường Sex là một enum với tên được lưu trữ trong db
     @Enumerated(EnumType.STRING)
     private Sex sex;
@@ -48,6 +46,12 @@ public class Clothes{
     private Status status;
     @Column(name = "main_path")
     private String mainPath;
+    @ManyToMany
+    @JoinTable(name = "clothes_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "clothes_id")
+    )
+    private List<Category> categories;
     @ElementCollection
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
     @MapKeyColumn(name = "media_path")

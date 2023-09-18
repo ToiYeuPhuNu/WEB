@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import project.WebGioiThieuSanPham.models.Clothes;
-import project.WebGioiThieuSanPham.service.ClothesServiceImpl;
+import project.WebGioiThieuSanPham.service.clothes.ClothesServiceImpl;
 
 
 import java.util.UUID;

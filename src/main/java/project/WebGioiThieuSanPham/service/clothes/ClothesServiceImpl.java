@@ -1,4 +1,4 @@
-package project.WebGioiThieuSanPham.service;
+package project.WebGioiThieuSanPham.service.clothes;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
