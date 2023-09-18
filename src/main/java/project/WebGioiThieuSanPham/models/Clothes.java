@@ -1,6 +1,7 @@
 package project.WebGioiThieuSanPham.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Clothes extends MDMAEntity{
     @Column(name = "uuid")
     protected UUID id;
     @Column(unique = true)
+    @Pattern(regexp = "^[A-Z]+$", message = "Tên không hợp lệ")
     private String name;
     //đánh dấu kiểu dữ liệu của trường Sex là một enum với tên được lưu trữ trong db
     @Enumerated(EnumType.STRING)

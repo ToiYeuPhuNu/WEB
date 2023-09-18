@@ -1,11 +1,10 @@
-package project.WebGioiThieuSanPham.dto.clothesDto.request;
+package project.WebGioiThieuSanPham.dto.clothesDto.response;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.enums.Size;
 import project.WebGioiThieuSanPham.enums.Status;
@@ -18,7 +17,8 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClothesRequest {
+public class ClothesResponse {
+    private UUID id;
     private String name;
     private Sex sex;
     private Map<Size, Integer> sizesStock = new HashMap<>();
@@ -27,6 +27,6 @@ public class ClothesRequest {
     private Date releaseDate;
     private Status status;
     private String mainPath;
-    private List<CategoryRequest> categories;
+    private List<Category> categories;
     List<String> MediaPath = new ArrayList<>();
 }
