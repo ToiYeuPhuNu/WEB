@@ -3,6 +3,7 @@ package project.WebGioiThieuSanPham.service.clothes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.FilterRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
@@ -20,7 +21,7 @@ public interface ClothesService {
     public ClothesDetailView getClothesById(UUID id);
     public Page<ClothesAvatarView> getAllClothes(int page);
     public Page<ClothesAvatarView> getlothesByCategory(UUID category,int page);
-    public ClothesDetailView createClothes(ClothesDetailView clothesDetailView);
+    public ClothesDetailView createClothes(ClothesRequest clothesRequest);
 
     List<Clothes> getlothesByCategory(UUID categoryId);
 }

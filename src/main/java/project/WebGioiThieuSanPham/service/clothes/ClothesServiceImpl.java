@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
+import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
@@ -74,8 +75,8 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public ClothesDetailView createClothes(ClothesDetailView clothesDetailView) {
-        String clothesName = clothesDetailView.getName();
+    public ClothesDetailView createClothes(ClothesRequest clothesRequest) {
+        String clothesName = clothesRequest.getName();
         if (clothesRepository.existsByName(clothesName)) {
             throw new RuntimeException("Tên sản phẩm đã tồn tại.");
         }
@@ -83,13 +84,13 @@ public class ClothesServiceImpl implements ClothesService {
         if (clothesName == null || clothesName.trim().isEmpty()) {
             throw new RuntimeException("Tên sản phẩm không hợp lệ.");
         }
-        Category category = categoryRepository.findByName(clothesDetailView.getCategory())
+        Category category = categoryRepository.findByName(clothesRequest.getCategories().toString())
                 .orElseGet(()-> {
                     Category newCategory = new Category();
-                    newCategory.setName(clothesDetailView.getCategory());
+                    newCategory.setName(clothesRequest.getCategories().toString());
                     return categoryRepository.save(newCategory);
                 });
-        Clothes clothes = clothesMapper.clothesDetailToClothes(clothesDetailView);
+        Clothes clothes = clothesMapper.clothesRepuestToClothes(clothesRequest);
         clothes.setCategories((List<Category>) category);
         clothes = clothesRepository.save(clothes);
         return clothesMapper.ClothesToClothesDetail(clothes);
