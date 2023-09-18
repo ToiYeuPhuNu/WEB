@@ -3,61 +3,78 @@ package project.WebGioiThieuSanPham.service.clothes;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Clothes;
+import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
 
+import java.util.List;
 import java.util.UUID;
-@RequiredArgsConstructor
 
-@AllArgsConstructor
 @Service
 public class ClothesServiceImpl implements ClothesService {
-    ClothesRepository clothesRepository;
-    private ClothesMapper mapper;
-
-    @Override
-    public Clothes add(Clothes clothes) {
-        return clothesRepository.save(clothes);
-    }
-    @Override
-    public Clothes getById(UUID id) {
-        return clothesRepository.findById(id).orElse(null);
+    private final ClothesRepository clothesRepository;
+    private final ClothesMapper clothesMapper;
+    private final CategoryRepository categoryRepository;
+    public ClothesServiceImpl(ClothesMapper clothesMapper, ClothesRepository clothesRepository, CategoryRepository categoryRepository){
+        this.clothesRepository =  clothesRepository;
+        this.clothesMapper = clothesMapper;
+        this.categoryRepository = categoryRepository;
     }
 
-//    public Page<ClothesAvatarView> filterClothes(FilterRequest filterRequest, Pageable pageable) {
-//        String category = filterRequest.getCategory();
-//        String color = filterRequest.getColor();
-//        Sex sex = filterRequest.getSex();
-//        BigDecimal minPrice = filterRequest.getMinPrice();
-//        BigDecimal maxPrice = filterRequest.getMaxPrice();
-//
-//        Page<Clothes> clothesPage = clothesRepository.filterClothes(
-//                category,
-//                color,
-//                sex,
-//                minPrice,
-//                maxPrice,
-//                pageable
-//        );
-//
-//        List<ClothesAvatarView> avatarViews = new ArrayList<>();
-//        for (Clothes clothes : clothesPage.getContent()) {
-//            ClothesAvatarView avatarView = new ClothesAvatarView();
-//            avatarView.setId(clothes.getId());
-//            avatarView.setName(clothes.getName());
-//            avatarView.setPrice(clothes.getPrice());
-//            avatarView.setStatus(clothes.getStatus());
-//            avatarViews.add(avatarView);
-//        }
-//
-//        return new PageImpl<>(avatarViews, pageable, clothesPage.getTotalElements());
-//    }
+    @Override
+    public ClothesDetailView updateClothes(UUID id, ClothesDetailView clothesDetailView) {
+        Clothes existingClothes = clothesRepository.findById(id).orElseThrow(()-> new RuntimeException("Clothes not found"));
+        existingClothes = clothesMapper.updateClothesFromClothesDetail(clothesDetailView, clothesDetailView.getCategory());
+        existingClothes = clothesRepository.save(existingClothes);
+        return clothesMapper.ClothesToClothesDetail(existingClothes);
+    }
 
+    @Override
+    public void deleteClothes(UUID id) {
+        Clothes clothes = clothesRepository.findById(id).orElseThrow(() -> new RuntimeException("Clothes not found"));
+        clothesRepository.delete(clothes);
+    }
 
+    @Override
+    public ClothesDetailView getClothesById(UUID id) {
+        Clothes clothes = clothesRepository.findById(id).orElseThrow(()-> new RuntimeException("Clothes not found"));
+        return clothesMapper.ClothesToClothesDetail(clothes);
+    }
+
+    @Override
+    public Page<ClothesAvatarView> getAllClothes(int page) {
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page,size);
+        //lấy ds sp theo trang
+        Page<Clothes> clothesPage = clothesRepository.findAll(pageRequest);
+        //chuyển đổi trang sp clothes thành clothesAvatrView
+        Page<ClothesAvatarView> clothesAvatarsPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
+        return clothesAvatarsPage;
+    }
+
+    @Override
+    public Page<ClothesAvatarView> getlothesByCategory(UUID category, int page) {
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        //lấy ds sp theo trang và thể loại
+        Page<Clothes> clothesPage = clothesRepository.findByCategory(category, pageRequest);
+        //chuyển đổi trang sp clothes thành clothesAvatrView
+        Page<ClothesAvatarView> clothesAvatarViewPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
+        return clothesAvatarViewPage;
+    }
+
+    @Override
+    public List<Clothes> getlothesByCategory(UUID categoryId) {
+        return clothesRepository.findByCategoryId(categoryId);
+    }
 }
 
 
