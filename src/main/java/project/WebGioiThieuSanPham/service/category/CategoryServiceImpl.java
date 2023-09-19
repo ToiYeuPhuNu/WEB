@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         // Kiểm tra xem danh mục đã tồn tại trong cơ sở dữ liệu hay chưa
         Optional<Category> existingCategory = categoryRepository.findByName(categoryName);
         if (existingCategory.isPresent()){
-            throw new RuntimeException("Danh mục ã tồn tại");
+            throw new RuntimeException("Danh mục đã tồn tại");
         }
         return categoryRepository.save(category);
     }

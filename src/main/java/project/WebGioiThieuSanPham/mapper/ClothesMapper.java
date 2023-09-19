@@ -16,14 +16,14 @@ import java.util.List;
 @Service
 public interface ClothesMapper {
 
-     ClothesDetailView toDao(Clothes clothes);
-     List<ClothesAvatarView> toListDao(Clothes clothes);
+//     ClothesDetailView toDao(Clothes clothes);
+//     List<ClothesAvatarView> toListDao(Clothes clothes);
      Clothes updateClothesFromClothesDetail(ClothesDetailView clothesDetailView, String category);
      Clothes clothesRepuestToClothes(ClothesRequest clothesRequest);
      ClothesDetailView ClothesToClothesDetail(Clothes clothes);
      ClothesAvatarView ClothesToClothesAvatar(Clothes clothes);
      Clothes clothesAvatarToClothes(ClothesAvatarView clothesAvatarView);
-     ClothesResponse ClothesToClothesResponse(Clothes clothes);
+     ClothesResponse clothesToClothesResponse(Clothes clothes);
 
      Clothes updateClothesFromClothesResponse();
 }

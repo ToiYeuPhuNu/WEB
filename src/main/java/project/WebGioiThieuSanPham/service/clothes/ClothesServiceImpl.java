@@ -107,7 +107,7 @@ public class ClothesServiceImpl implements ClothesService {
 
             clothes = clothesRepository.save(clothes);
 
-            return clothesMapper.ClothesToClothesResponse(clothes);
+            return clothesMapper.clothesToClothesResponse(clothes);
         } catch (Exception e) {
             throw e;
         }
@@ -150,7 +150,7 @@ public class ClothesServiceImpl implements ClothesService {
 
             existingClothes = clothesRepository.save(existingClothes);
 
-            return clothesMapper.ClothesToClothesResponse(existingClothes);
+            return clothesMapper.clothesToClothesResponse(existingClothes);
         }catch (Exception e){
             throw e;
         }
