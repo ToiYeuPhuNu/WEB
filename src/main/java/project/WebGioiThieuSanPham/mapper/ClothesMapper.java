@@ -19,7 +19,7 @@ public interface ClothesMapper {
 //     ClothesDetailView toDao(Clothes clothes);
 //     List<ClothesAvatarView> toListDao(Clothes clothes);
      Clothes updateClothesFromClothesDetail(ClothesDetailView clothesDetailView, String category);
-     Clothes clothesRepuestToClothes(ClothesRequest clothesRequest);
+     Clothes clothesRequestToClothes(ClothesRequest clothesRequest);
      ClothesDetailView ClothesToClothesDetail(Clothes clothes);
      ClothesAvatarView ClothesToClothesAvatar(Clothes clothes);
      Clothes clothesAvatarToClothes(ClothesAvatarView clothesAvatarView);

@@ -1,12 +1,15 @@
 package project.WebGioiThieuSanPham.service.clothes;
 
 
+import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
+import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
@@ -17,23 +20,17 @@ import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
-
+import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@AllArgsConstructor
 @Service
 public class ClothesServiceImpl implements ClothesService {
     private final ClothesRepository clothesRepository;
     private final ClothesMapper clothesMapper;
     private final CategoryRepository categoryRepository;
-    public ClothesServiceImpl(ClothesMapper clothesMapper, ClothesRepository clothesRepository, CategoryRepository categoryRepository){
-        this.clothesRepository =  clothesRepository;
-        this.clothesMapper = clothesMapper;
-        this.categoryRepository = categoryRepository;
-    }
-
 
     @Override
     public void deleteClothes(UUID id) {
@@ -73,12 +70,12 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public ClothesResponse createClothes(ClothesRequest clothesRequest) {
-        try {
             List<Object> nonEmptyFields = Arrays.asList(
                     clothesRequest.getName(),
                     clothesRequest.getSize(),
                     clothesRequest.getPrice(),
-                    clothesRequest.getCategories(),
+                    clothesRequest.getCategoryRequest(),
+                    clothesRequest.getCategoryRequest(),
                     clothesRequest.getDescription(),
                     clothesRequest.getReleaseDate(),
                     clothesRequest.getStatus(),
@@ -88,72 +85,56 @@ public class ClothesServiceImpl implements ClothesService {
             if (nonEmptyFields.stream().anyMatch(field -> field == null || field.toString().trim().isEmpty())) {
                 throw new RuntimeException("Các trường không được để trống");
             }
-            Category category = categoryRepository.findByName(clothesRequest.getCategories().toString())
-                    .orElseGet(() -> {
-                        Category newCategory = new Category();
-                        newCategory.setName(clothesRequest.getCategories().toString());
-                        return categoryRepository.save(newCategory);
-                    });
-            Clothes clothes = clothesMapper.clothesRepuestToClothes(clothesRequest);
-            clothes.setCategories((List<Category>) category);
-            clothes.setName(clothesRequest.getName());
-            clothes.setSizesStock(clothesRequest.getSizesStock());
-            clothes.setPrice(clothesRequest.getPrice());
-            clothes.setDescription(clothesRequest.getDescription());
-            clothes.setReleaseDate(clothesRequest.getReleaseDate());
-            clothes.setStatus(Status.valueOf(clothesRequest.getStatus()));
-            clothes.setMainPath(clothesRequest.getMainPath());
-            clothes.setMediaPath(clothesRequest.getMediaPath());
+            Category existingCategory = categoryRepository.findByName(clothesRequest.getCategoryRequest().getName());
+            if (clothesRequest.getCategoryRequest() != null){
+                Category category = categoryRepository.findByName(clothesRequest.getName());
+                if (category == null){
+                    category = new Category();
+                    category.setName(clothesRequest.getName());
+                    categoryRepository.save(existingCategory);
+                }
+            }
 
+            Clothes clothes = new Clothes();
+            BeanUtils.copyProperties(clothesRequest, clothes);
+            clothes.setCategory(existingCategory);
             clothes = clothesRepository.save(clothes);
-
             return clothesMapper.clothesToClothesResponse(clothes);
-        } catch (Exception e) {
-            throw e;
-        }
     }
     @Override
     public ClothesResponse updateClothes(UUID id,ClothesRequest clothesRequest) {
-        try {
-            List<Object> nonEmptyFields = Arrays.asList(
-                    clothesRequest.getName(),
-                    clothesRequest.getSize(),
-                    clothesRequest.getPrice(),
-                    clothesRequest.getCategories(),
-                    clothesRequest.getDescription(),
-                    clothesRequest.getReleaseDate(),
-                    clothesRequest.getStatus(),
-                    clothesRequest.getMainPath(),
-                    clothesRequest.getMediaPath()
-            );
-            if (nonEmptyFields.stream().anyMatch(field -> field == null || field.toString().trim().isEmpty())) {
-                throw new RuntimeException("Các trường không được để trống");
-            }
+
+        List<Object> nonEmptyFields = Arrays.asList(
+                clothesRequest.getName(),
+                clothesRequest.getSize(),
+                clothesRequest.getPrice(),
+                clothesRequest.getCategoryRequest(),
+                clothesRequest.getCategoryRequest(),
+                clothesRequest.getDescription(),
+                clothesRequest.getReleaseDate(),
+                clothesRequest.getStatus(),
+                clothesRequest.getMainPath(),
+                clothesRequest.getMediaPath()
+        );
+        if (nonEmptyFields.stream().anyMatch(field -> field == null || field.toString().trim().isEmpty())) {
+            throw new RuntimeException("Các trường không được để trống");
+        }
             Clothes existingClothes = clothesRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm quần áo"));
-            Category category = categoryRepository.findByName(clothesRequest.getCategories().toString())
-                    .orElseGet(() -> {
-                        Category newCategory = new Category();
-                        newCategory.setName(clothesRequest.getCategories().toString());
-                        return categoryRepository.save(newCategory);
-                    });
-            existingClothes = clothesMapper.clothesRepuestToClothes(clothesRequest);
-            existingClothes.setCategories((List<Category>) category);
-            existingClothes.setName(clothesRequest.getName());
-            existingClothes.setSizesStock(clothesRequest.getSizesStock());
-            existingClothes.setPrice(clothesRequest.getPrice());
-            existingClothes.setDescription(clothesRequest.getDescription());
-            existingClothes.setReleaseDate(clothesRequest.getReleaseDate());
-            existingClothes.setStatus(Status.valueOf(clothesRequest.getStatus()));
-            existingClothes.setMainPath(clothesRequest.getMainPath());
-            existingClothes.setMediaPath(clothesRequest.getMediaPath());
-
-            existingClothes = clothesRepository.save(existingClothes);
-
-            return clothesMapper.clothesToClothesResponse(existingClothes);
-        }catch (Exception e){
-            throw e;
+        Category existingCategory = categoryRepository.findByName(clothesRequest.getCategoryRequest().getName());
+        if (clothesRequest.getCategoryRequest() != null){
+            Category category = categoryRepository.findByName(clothesRequest.getName());
+            if (category == null){
+                category = new Category();
+                category.setName(clothesRequest.getName());
+                categoryRepository.save(existingCategory);
+            }
         }
+
+        BeanUtils.copyProperties(clothesRequest, existingClothes);
+        existingClothes.setCategory(existingCategory);
+        existingClothes = clothesRepository.save(existingClothes);
+        return clothesMapper.clothesToClothesResponse(existingClothes);
     }
 
 

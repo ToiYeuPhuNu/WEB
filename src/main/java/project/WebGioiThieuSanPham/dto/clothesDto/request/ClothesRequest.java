@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.enums.Size;
 import project.WebGioiThieuSanPham.enums.Status;
 import project.WebGioiThieuSanPham.models.Category;
@@ -28,6 +29,6 @@ public class ClothesRequest {
     private Date releaseDate;
     private String status;
     private String mainPath;
-    private List<Category> categories;
+    private CategoryRequest categoryRequest;
     List<String> MediaPath = new ArrayList<>();
 }

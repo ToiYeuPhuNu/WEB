@@ -3,56 +3,62 @@ package project.WebGioiThieuSanPham.service.category;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
+import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
+import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
+import project.WebGioiThieuSanPham.mapper.CategoryMapper;
 import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
 import project.WebGioiThieuSanPham.service.clothes.ClothesService;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ClothesRepository clothesRepository;
-    private ClothesService clothesService;
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ClothesService clothesService, ClothesRepository clothesRepository){
-        this.categoryRepository = categoryRepository;
-        this.clothesService = clothesService;
-        this.clothesRepository = clothesRepository;
-    }
+    private final CategoryMapper categoryMapper;
+    private final ClothesService clothesService;
     @Override
-    public Category createCategory(Category category) {
-        // Kiểm tra tính hợp lệ của dữ liệu trước khi lưu danh mục
-        Objects.requireNonNull(category, "Danh mục không được null");
-        String categoryName = Objects.requireNonNull(category.getName(), "Tên danh mục không hợp lệ");
-        // Kiểm tra xem danh mục đã tồn tại trong cơ sở dữ liệu hay chưa
-        Optional<Category> existingCategory = categoryRepository.findByName(categoryName);
-        if (existingCategory.isPresent()){
-            throw new RuntimeException("Danh mục đã tồn tại");
+    public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+        String categoryName = categoryRequest.getName();
+        Category existingCategory = categoryRepository.findByName(categoryName);
+        if (existingCategory != null){
+            throw new RuntimeException("Danh mục đã tồn tại!");
+        } else if (StringUtils.isBlank(categoryName)) {
+            throw new RuntimeException("Tên không hợp lệ!");
+        } else {
+            Category newCategory = new Category();
+            newCategory.setName(categoryName);
+            categoryRepository.save(newCategory);
+            return categoryMapper.categoryToCategoryResponse(newCategory);
         }
-        return categoryRepository.save(category);
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(categoryMapper::categoryToCategoryResponse).collect(Collectors.toList());
     }
 
     @Override
-    public Category updateCategory(UUID categoryId, Category updateCategory) {
+    public CategoryResponse updateCategory(UUID categoryId, CategoryRequest updateCategoryRequest) {
         Objects.requireNonNull(categoryId, "ID của danh mục không được null.");
         //kiểm tra xem danh mục có tồn tại hay không
         Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
-        Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại "));
+        Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại!"));
+        String newName = updateCategoryRequest.getName();
+        if (newName!=null && StringUtils.isBlank(newName)){
+            throw new RuntimeException("Tên không hợp lệ!");
+        }
         // Cập nhật thông tin danh mục
-        existingCategory.setName(updateCategory.getName());
-        existingCategory.setClothes(updateCategory.getClothes());
-        return categoryRepository.save(existingCategory);
+        existingCategory.setName(updateCategoryRequest.getName());
+        categoryRepository.save(existingCategory);
+        return categoryMapper.categoryToCategoryResponse(existingCategory);
     }
 
     @Override
@@ -60,10 +66,6 @@ public class CategoryServiceImpl implements CategoryService {
         Objects.requireNonNull(categoryId, "ID của danh mục không được null!");
         Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
         Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại "));
-        List<Clothes> clothesDelete = clothesRepository.findByCategoryId(categoryId);
-        for (Clothes clothes : clothesDelete){
-            clothes.setCategories(null);
-        }
         categoryRepository.deleteById(categoryId);
     }
 }
