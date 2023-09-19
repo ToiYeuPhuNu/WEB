@@ -18,5 +18,4 @@ public class ClothesAvatarView extends BaseDto{
     private String mainPath;
     private String name;
     private BigDecimal price;
-    private Status status;
 }
