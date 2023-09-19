@@ -16,6 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name ="category")
 public class Category extends MDMAEntity{
-    @ManyToMany( mappedBy = "categories", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
     private List<Clothes> clothes;
 }

@@ -41,12 +41,9 @@ public class Clothes extends MDMAEntity{
     private Status status;
     @Column(name = "main_path")
     private String mainPath;
-    @ManyToMany
-    @JoinTable(name = "clothes_category",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "clothes_id")
-    )
-    private List<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     @ElementCollection
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
     @MapKeyColumn(name = "media_path")
