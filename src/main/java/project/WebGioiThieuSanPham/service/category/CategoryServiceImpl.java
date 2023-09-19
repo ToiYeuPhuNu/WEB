@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
+import project.WebGioiThieuSanPham.repository.ClothesRepository;
 import project.WebGioiThieuSanPham.service.clothes.ClothesService;
 
 import java.util.List;
@@ -16,11 +17,13 @@ import java.util.UUID;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ClothesRepository clothesRepository;
     private ClothesService clothesService;
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ClothesService clothesService){
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ClothesService clothesService, ClothesRepository clothesRepository){
         this.categoryRepository = categoryRepository;
         this.clothesService = clothesService;
+        this.clothesRepository = clothesRepository;
     }
     @Override
     public Category createCategory(Category category) {
@@ -54,10 +57,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(UUID categoryId) {
-        Objects.requireNonNull(categoryId, "ID của danh mục không được null.");
+        Objects.requireNonNull(categoryId, "ID của danh mục không được null!");
         Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
         Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại "));
-        List<Clothes> clothesDelete = clothesService.getlothesByCategory(categoryId);
+        List<Clothes> clothesDelete = clothesRepository.findByCategoryId(categoryId);
         for (Clothes clothes : clothesDelete){
             clothes.setCategories(null);
         }

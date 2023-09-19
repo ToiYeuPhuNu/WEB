@@ -3,6 +3,7 @@ package project.WebGioiThieuSanPham.service.clothes;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -19,6 +20,7 @@ import project.WebGioiThieuSanPham.repository.ClothesRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,22 +48,24 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public Page<ClothesAvatarView> getAllClothes(int page) {
+    public Page<ClothesAvatarView> getAllClothes(Optional<Integer> pageOptional) {
         int size = 10;
-        PageRequest pageRequest = PageRequest.of(page,size);
+        int page = pageOptional.orElse(0);
+        Pageable pageable = PageRequest.of(page,size);
         //lấy ds sp theo trang
-        Page<Clothes> clothesPage = clothesRepository.findAll(pageRequest);
+        Page<Clothes> clothesPage = clothesRepository.findAll(pageable);
         //chuyển đổi trang sp clothes thành clothesAvatrView
         Page<ClothesAvatarView> clothesAvatarsPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
         return clothesAvatarsPage;
     }
 
     @Override
-    public Page<ClothesAvatarView> getlothesByCategory(UUID categoryId, int page) {
+    public Page<ClothesAvatarView> getClothesByCategory(UUID categoryId, Optional<Integer> pageOptional) {
         int size = 10;
-        PageRequest pageRequest = PageRequest.of(page, size);
+        int page = pageOptional.orElse(0);
+        Pageable pageable = PageRequest.of(page, size);
         //lấy ds sp theo trang và thể loại
-        Page<Clothes> clothesPage = clothesRepository.findByCategory(categoryId, pageRequest);
+        Page<Clothes> clothesPage = clothesRepository.findByCategory(categoryId, pageable);
         //chuyển đổi trang sp clothes thành clothesAvatrView
         Page<ClothesAvatarView> clothesAvatarViewPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
         return clothesAvatarViewPage;

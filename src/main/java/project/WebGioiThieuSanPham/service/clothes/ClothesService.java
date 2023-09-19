@@ -14,6 +14,7 @@ import project.WebGioiThieuSanPham.models.Clothes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ClothesService {
@@ -21,8 +22,8 @@ public interface ClothesService {
     public ClothesResponse updateClothes(UUID id,ClothesRequest clothesRequest);
     public void deleteClothes(UUID id);
     public ClothesDetailView getClothesById(UUID id);
-    public Page<ClothesAvatarView> getAllClothes(int page);
-    public Page<ClothesAvatarView> getlothesByCategory(UUID categoryId, int page);
+    public Page<ClothesAvatarView> getAllClothes(Optional<Integer> pageOptional);
+    public Page<ClothesAvatarView> getClothesByCategory(UUID categoryId, Optional<Integer> pageOptional);
     public ClothesResponse createClothes(ClothesRequest clothesRequest);
 
 
