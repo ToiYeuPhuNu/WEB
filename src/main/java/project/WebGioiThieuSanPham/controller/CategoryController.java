@@ -8,7 +8,6 @@ import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.service.category.CategoryService;
-import project.WebGioiThieuSanPham.service.clothes.ClothesService;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,11 +22,11 @@ public class CategoryController {
         return categoryService.createCategory(categoryRequest);
     }
     @PutMapping("/{id}")
-    public CategoryResponse updateCategory(UUID categoryId, CategoryRequest updateCategoryRequest){
+    public CategoryResponse updateCategory(@PathVariable(name = "id") UUID categoryId, CategoryRequest updateCategoryRequest){
         return categoryService.updateCategory(categoryId, updateCategoryRequest);
     }
     @DeleteMapping("/{id}")
-    public void deleteCategory(UUID categoryId){
+    public void deleteCategory(@PathVariable(name = "id") UUID categoryId){
         categoryService.deleteCategory(categoryId);
     }
     @GetMapping("/")
@@ -35,7 +34,7 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
     @GetMapping("/{id}")
-    public BasePage<ClothesAvatarView> getClothesFromCategory(@RequestBody ApiListBaseRequest apiListBaseRequest, UUID id ){
+    public BasePage<ClothesAvatarView> getClothesFromCategory(@RequestBody ApiListBaseRequest apiListBaseRequest,@PathVariable(name = "id") UUID id ){
         return categoryService.getClothesByCategory(apiListBaseRequest, id);
     }
 }

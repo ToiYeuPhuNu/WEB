@@ -2,10 +2,8 @@ package project.WebGioiThieuSanPham.mapper;
 
 
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;

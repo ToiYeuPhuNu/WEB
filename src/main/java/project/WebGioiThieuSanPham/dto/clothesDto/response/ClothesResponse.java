@@ -9,7 +9,6 @@ import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
 import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.enums.Size;
 import project.WebGioiThieuSanPham.enums.Status;
-import project.WebGioiThieuSanPham.models.Category;
 
 import java.math.BigDecimal;
 import java.util.*;
