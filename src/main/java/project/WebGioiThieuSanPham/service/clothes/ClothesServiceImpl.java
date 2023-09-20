@@ -70,13 +70,14 @@ public class ClothesServiceImpl implements ClothesService {
             if (nonEmptyFields.stream().anyMatch(field -> field == null || field.toString().trim().isEmpty())) {
                 throw new RuntimeException("Các trường không được để trống");
             }
-            Category existingCategory = categoryRepository.findByName(clothesRequest.getCategoryRequest().getName());
+            Category existingCategory = null;
             if (clothesRequest.getCategoryRequest() != null){
-                Category category = categoryRepository.findByName(clothesRequest.getName());
-                if (category == null){
-                    category = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
-                    category.setName(clothesRequest.getName());
-                    categoryRepository.save(existingCategory);
+                String categoryName = clothesRequest.getCategoryRequest().getName();
+                existingCategory = categoryRepository.findByName(categoryName);
+                if (existingCategory == null){
+                   Category newCategory = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
+                    newCategory.setName(categoryName);
+                    existingCategory = categoryRepository.save(newCategory);
                 }
             }
 
@@ -105,12 +106,12 @@ public class ClothesServiceImpl implements ClothesService {
         }
             Clothes existingClothes = clothesRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm quần áo"));
-        Category existingCategory = categoryRepository.findByName(clothesRequest.getCategoryRequest().getName());
+        Category existingCategory = null;
         if (clothesRequest.getCategoryRequest() != null){
-            Category category = categoryRepository.findByName(clothesRequest.getName());
-            if (category == null){
-                category = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
-                category.setName(clothesRequest.getName());
+            existingCategory= categoryRepository.findByName(clothesRequest.getCategoryRequest().getName());
+            if (existingCategory == null){
+                existingCategory = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
+                existingCategory.setName(clothesRequest.getName());
                 categoryRepository.save(existingCategory);
             }
         }
