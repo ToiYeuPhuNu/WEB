@@ -19,7 +19,7 @@ import java.util.UUID;
 public class CategoryController {
     CategoryService categoryService;
     @PostMapping("/add")
-    public CategoryResponse createCategory(@PathVariable(name = "categoryRequest") CategoryRequest categoryRequest){
+    public CategoryResponse createCategory(@RequestBody CategoryRequest categoryRequest){
         return categoryService.createCategory(categoryRequest);
     }
     @PutMapping("/{id}")

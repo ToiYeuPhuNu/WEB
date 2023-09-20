@@ -57,9 +57,8 @@ public class ClothesServiceImpl implements ClothesService {
 
             List<Object> nonEmptyFields = Arrays.asList(
                     clothesRequest.getName(),
-                    clothesRequest.getSize(),
+                    clothesRequest.getSizesStock(),
                     clothesRequest.getPrice(),
-                    clothesRequest.getCategoryRequest(),
                     clothesRequest.getCategoryRequest(),
                     clothesRequest.getDescription(),
                     clothesRequest.getReleaseDate(),
@@ -91,9 +90,8 @@ public class ClothesServiceImpl implements ClothesService {
 
         List<Object> nonEmptyFields = Arrays.asList(
                 clothesRequest.getName(),
-                clothesRequest.getSize(),
+                clothesRequest.getSizesStock(),
                 clothesRequest.getPrice(),
-                clothesRequest.getCategoryRequest(),
                 clothesRequest.getCategoryRequest(),
                 clothesRequest.getDescription(),
                 clothesRequest.getReleaseDate(),

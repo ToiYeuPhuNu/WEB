@@ -23,12 +23,12 @@ import java.util.UUID;
 public class ClothesDetailView extends BaseDto {
     private UUID id;
     private Sex sex;
+    private Map<Size, Integer> size;
     private String name;
     private BigDecimal price;
     private List<Category> categories;
     private String description;
     private Date releaseDate;
     private Status status;
-    private Map<Size, Integer> size;
 
 }

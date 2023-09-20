@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
+import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.enums.Size;
 import project.WebGioiThieuSanPham.enums.Status;
 import project.WebGioiThieuSanPham.models.Category;
@@ -22,7 +23,7 @@ import java.util.*;
 @NoArgsConstructor
 public class ClothesRequest {
     private String name;
-    private Size size;
+    private Sex sex;
     private Map<Size, Integer> sizesStock = new HashMap<>();
     private BigDecimal price;
     private String description;
