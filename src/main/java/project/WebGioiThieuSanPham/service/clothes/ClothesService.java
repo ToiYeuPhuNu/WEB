@@ -8,6 +8,7 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
+import project.WebGioiThieuSanPham.enums.Sex;
 
 import java.util.UUID;
 
@@ -21,5 +22,7 @@ public interface ClothesService {
      BasePage<ClothesAvatarView> search(ApiListBaseRequest apiListBaseRequest, SearchByKeyword searchRequest);
 
      BasePage<ClothesAvatarView> getAll(ApiListBaseRequest apiListBaseRequest);
+
+     BasePage<ClothesAvatarView> getClothesBySex(ApiListBaseRequest apiListBaseRequest, Sex sex);
 
 }

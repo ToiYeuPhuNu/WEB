@@ -13,6 +13,7 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
+import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.service.clothes.ClothesServiceImpl;
 
 
@@ -47,6 +48,11 @@ public class ClothesController {
     @GetMapping("/")
     public BasePage<ClothesAvatarView> getAllClothes(@RequestBody ApiListBaseRequest apiListBaseRequest){
         return clothesService.getAll((apiListBaseRequest));
+    }
+
+    @GetMapping("/gender")
+    public BasePage<ClothesAvatarView> findClothesByGender(@RequestBody ApiListBaseRequest apiListBaseRequest, Sex sex){
+        return clothesService.getClothesBySex(apiListBaseRequest, sex);
     }
 
     @GetMapping("/search")

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,14 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
+import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.mapper.CategoryMapper;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
+import project.WebGioiThieuSanPham.service.category.CategoryServiceImpl;
 import project.WebGioiThieuSanPham.utils.FilterDataUtil;
 
 import java.util.*;
@@ -126,6 +129,13 @@ public class ClothesServiceImpl implements ClothesService {
         return clothesMapper.clothesToClothesResponse(existingClothes);
     }
 
+    public BasePage<ClothesAvatarView> getClothesBySex(ApiListBaseRequest apiListBaseRequest, Sex sex){
+        Pageable pageable = FilterDataUtil.buildPageRequest(apiListBaseRequest);
+        Page<Clothes> page = clothesRepository.findClothesBySex(sex, pageable);
+        return this.map(page);
+
+    }
+
     public BasePage<ClothesAvatarView> search(ApiListBaseRequest apiListBaseRequest, SearchByKeyword searchRequest){
         String keyword = searchRequest.getKeyword();
         return this.map(searchUtil
@@ -135,7 +145,6 @@ public class ClothesServiceImpl implements ClothesService {
 
     public BasePage<ClothesAvatarView> getAll(ApiListBaseRequest apiListBaseRequest){
         Page<Clothes> page = clothesRepository.findAll(FilterDataUtil.buildPageRequest(apiListBaseRequest));
-
         return this.map(page);
 
     }
@@ -166,7 +175,6 @@ public class ClothesServiceImpl implements ClothesService {
             }
             return this;
         }
-
 
         public Page<Clothes> build(ApiListBaseRequest filter) {
             Page<Clothes> data;
