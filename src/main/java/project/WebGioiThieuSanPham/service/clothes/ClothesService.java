@@ -10,6 +10,7 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
 import project.WebGioiThieuSanPham.enums.Sex;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface ClothesService {
@@ -25,4 +26,5 @@ public interface ClothesService {
 
      BasePage<ClothesAvatarView> getClothesBySex(ApiListBaseRequest apiListBaseRequest, Sex sex);
 
+     BasePage<ClothesAvatarView> filterUtil(ApiListBaseRequest apiListBaseRequest, Sex sex, UUID categoryId, BigDecimal minPrice, BigDecimal maxPrice);
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
 import project.WebGioiThieuSanPham.dto.SearchByKeyword;
+import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
@@ -25,9 +26,9 @@ import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
-import project.WebGioiThieuSanPham.service.category.CategoryServiceImpl;
 import project.WebGioiThieuSanPham.utils.FilterDataUtil;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
@@ -148,6 +149,12 @@ public class ClothesServiceImpl implements ClothesService {
         return this.map(page);
 
     }
+
+    public BasePage<ClothesAvatarView> filterUtil(ApiListBaseRequest apiListBaseRequest, Sex sex, UUID categoryId, BigDecimal minPrice, BigDecimal maxPrice){
+        Pageable pageable = FilterDataUtil.buildPageRequest(apiListBaseRequest);
+        Page<Clothes> page = clothesRepository.filter(sex, categoryId, minPrice, maxPrice, pageable);
+        return this.map(page);
+    }
     protected BasePage<ClothesAvatarView> map(Page<Clothes> page) {
         BasePage<ClothesAvatarView> rPage = new BasePage<>();
         rPage.setData(clothesMapper.toListDao(page.getContent()));
@@ -175,6 +182,8 @@ public class ClothesServiceImpl implements ClothesService {
             }
             return this;
         }
+
+
 
         public Page<Clothes> build(ApiListBaseRequest filter) {
             Page<Clothes> data;
