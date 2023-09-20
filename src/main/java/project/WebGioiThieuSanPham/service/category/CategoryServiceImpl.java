@@ -3,7 +3,6 @@ package project.WebGioiThieuSanPham.service.category;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -40,16 +39,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getName();
+        if (StringUtils.isBlank(categoryName)) {
+            throw new RuntimeException("Tên danh mục không hợp lệ!");
+        }
         Category existingCategory = categoryRepository.findByName(categoryName);
         if (existingCategory != null){
             throw new RuntimeException("Danh mục đã tồn tại!");
-        } else if (StringUtils.isBlank(categoryName)) {
-            throw new RuntimeException("Tên danh mục không hợp lệ!");
-        } else {
-            Category newCategory = categoryMapper.categoryRequestToCategory(categoryRequest);
-            categoryRepository.save(newCategory);
-            return categoryMapper.categoryToCategoryResponse(newCategory);
         }
+        Category newCategory = categoryMapper.categoryRequestToCategory(categoryRequest);
+        categoryRepository.save(newCategory);
+        return categoryMapper.categoryToCategoryResponse(newCategory);
+
     }
 
     @Override
@@ -65,20 +65,21 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
         Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại!"));
         String newName = updateCategoryRequest.getName();
-        if (newName!=null && StringUtils.isBlank(newName)){
+        if (StringUtils.isBlank(newName)){
             throw new RuntimeException("Tên không hợp lệ!");
-        }else {
-            Category newCategory = categoryMapper.categoryRequestToCategory(updateCategoryRequest);
-            categoryRepository.save(newCategory);
-            return categoryMapper.categoryToCategoryResponse(newCategory);
         }
+        existingCategory.setName(newName);
+        categoryRepository.save(existingCategory);
+        return categoryMapper.categoryToCategoryResponse(existingCategory);
+
     }
 
     @Override
     public void deleteCategory(UUID categoryId) {
         Objects.requireNonNull(categoryId, "ID của danh mục không được null!");
-        Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
-        Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại "));
+        if(!categoryRepository.existsById(categoryId)){
+                throw new RuntimeException("Danh mục không tồn tại ");
+        }
         categoryRepository.deleteById(categoryId);
     }
     public BasePage<ClothesAvatarView> getClothesByCategory(ApiListBaseRequest apiListBaseRequest, UUID id){

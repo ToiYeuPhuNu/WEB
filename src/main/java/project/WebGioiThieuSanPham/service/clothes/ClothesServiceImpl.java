@@ -42,13 +42,17 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public void deleteClothes(UUID id) {
-        Clothes clothes = clothesRepository.findById(id).orElseThrow(() -> new RuntimeException("Clothes not found"));
+        Objects.requireNonNull(id, "ID của Clothes không được null");
+        Clothes clothes = clothesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Clothes với ID"));
         clothesRepository.delete(clothes);
     }
 
     @Override
     public ClothesDetailView getClothesById(UUID id) {
-        Clothes clothes = clothesRepository.findById(id).orElseThrow(()-> new RuntimeException("Clothes not found"));
+        Objects.requireNonNull(id, "ID của Clothes không được null");
+        Clothes clothes = clothesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Clothes với ID"));
         return clothesMapper.ClothesToClothesDetail(clothes);
     }
 
