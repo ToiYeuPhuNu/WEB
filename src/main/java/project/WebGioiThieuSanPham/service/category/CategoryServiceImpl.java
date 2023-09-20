@@ -26,9 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
     private final ClothesRepository clothesRepository;
 
     private final CategoryMapper categoryMapper;
@@ -46,10 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
         if (existingCategory != null){
             throw new RuntimeException("Danh mục đã tồn tại!");
         } else if (StringUtils.isBlank(categoryName)) {
-            throw new RuntimeException("Tên không hợp lệ!");
+            throw new RuntimeException("Tên danh mục không hợp lệ!");
         } else {
-            Category newCategory = new Category();
-            newCategory.setName(categoryName);
+            Category newCategory = categoryMapper.categoryRequestToCategory(categoryRequest);
             categoryRepository.save(newCategory);
             return categoryMapper.categoryToCategoryResponse(newCategory);
         }
@@ -70,11 +67,11 @@ public class CategoryServiceImpl implements CategoryService {
         String newName = updateCategoryRequest.getName();
         if (newName!=null && StringUtils.isBlank(newName)){
             throw new RuntimeException("Tên không hợp lệ!");
+        }else {
+            Category newCategory = categoryMapper.categoryRequestToCategory(updateCategoryRequest);
+            categoryRepository.save(newCategory);
+            return categoryMapper.categoryToCategoryResponse(newCategory);
         }
-        // Cập nhật thông tin danh mục
-        existingCategory.setName(updateCategoryRequest.getName());
-        categoryRepository.save(existingCategory);
-        return categoryMapper.categoryToCategoryResponse(existingCategory);
     }
 
     @Override

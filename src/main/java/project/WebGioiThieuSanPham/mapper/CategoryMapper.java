@@ -13,5 +13,5 @@ import project.WebGioiThieuSanPham.models.Clothes;
 @Service
 public interface CategoryMapper {
     CategoryResponse categoryToCategoryResponse(Category category);
-    Category categoyRequestToCategory(CategoryRequest categoryRequest);
+    Category categoryRequestToCategory(CategoryRequest categoryRequest);
 }

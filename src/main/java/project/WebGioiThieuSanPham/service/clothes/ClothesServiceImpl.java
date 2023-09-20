@@ -17,12 +17,12 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
+import project.WebGioiThieuSanPham.mapper.CategoryMapper;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
-import project.WebGioiThieuSanPham.service.category.CategoryServiceImpl;
 import project.WebGioiThieuSanPham.utils.FilterDataUtil;
 
 import java.util.*;
@@ -34,6 +34,7 @@ import java.util.UUID;
 public class ClothesServiceImpl implements ClothesService {
     private final ClothesRepository clothesRepository;
     private final ClothesMapper clothesMapper;
+    private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
     private final SearchUtil searchUtil= new SearchUtil();
 
@@ -73,7 +74,7 @@ public class ClothesServiceImpl implements ClothesService {
             if (clothesRequest.getCategoryRequest() != null){
                 Category category = categoryRepository.findByName(clothesRequest.getName());
                 if (category == null){
-                    category = new Category();
+                    category = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
                     category.setName(clothesRequest.getName());
                     categoryRepository.save(existingCategory);
                 }
@@ -108,7 +109,7 @@ public class ClothesServiceImpl implements ClothesService {
         if (clothesRequest.getCategoryRequest() != null){
             Category category = categoryRepository.findByName(clothesRequest.getName());
             if (category == null){
-                category = new Category();
+                category = categoryMapper.categoryRequestToCategory(clothesRequest.getCategoryRequest());
                 category.setName(clothesRequest.getName());
                 categoryRepository.save(existingCategory);
             }
@@ -125,7 +126,7 @@ public class ClothesServiceImpl implements ClothesService {
         return this.map(searchUtil
                 .ilike(keyword, "name")
                 .build(searchRequest));
-    };
+    }
 
     public BasePage<ClothesAvatarView> getAll(ApiListBaseRequest apiListBaseRequest){
         Page<Clothes> page = clothesRepository.findAll(FilterDataUtil.buildPageRequest(apiListBaseRequest));
