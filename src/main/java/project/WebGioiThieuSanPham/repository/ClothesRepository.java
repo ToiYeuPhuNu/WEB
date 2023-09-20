@@ -1,27 +1,19 @@
     package project.WebGioiThieuSanPham.repository;
 
-    import org.springframework.data.domain.Page;
-    import org.springframework.data.domain.PageRequest;
-    import org.springframework.data.domain.Pageable;
     import org.springframework.data.jpa.repository.JpaRepository;
     import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-    import org.springframework.data.jpa.repository.Query;
-    import org.springframework.data.repository.query.Param;
     import org.springframework.stereotype.Repository;
-    import project.WebGioiThieuSanPham.enums.Sex;
     import project.WebGioiThieuSanPham.models.Clothes;
 
-    import java.math.BigDecimal;
-    import java.util.List;
     import java.util.UUID;
     @Repository
     public interface ClothesRepository extends JpaRepository<Clothes, UUID>, JpaSpecificationExecutor<Clothes> {
-        Clothes findClothesByName(String name);
 
-        Page<Clothes> findByCategory(UUID categoryId, Pageable pageable);
-        List<Clothes> findByCategoryId(UUID categoryId);
 
-        boolean existsByName(String clothesName);
+
+//        <Clothes> Page<Clothes> findAll(Specification<Clothes> clothesSpecification, PageRequest pageRequest);
+
+        //  <Clothes> Page<Clothes> findAll(Specification<Clothes> clothesSpecification, PageRequest pageRequest);
 
 
 //        @Query("SELECT c FROM Clothes c " +

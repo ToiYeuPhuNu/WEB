@@ -2,9 +2,13 @@ package project.WebGioiThieuSanPham.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
 import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.service.category.CategoryService;
+import project.WebGioiThieuSanPham.service.clothes.ClothesService;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,5 +33,9 @@ public class CategoryController {
     @GetMapping("/")
     public List<CategoryResponse> getAllCategory(){
         return categoryService.getAllCategories();
+    }
+    @GetMapping("/{id}")
+    public BasePage<ClothesAvatarView> getClothesFromCategory(@RequestBody ApiListBaseRequest apiListBaseRequest, UUID id ){
+        return categoryService.getClothesByCategory(apiListBaseRequest, id);
     }
 }

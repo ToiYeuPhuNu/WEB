@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
+import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
+import project.WebGioiThieuSanPham.dto.SearchByKeyword;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
-import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.service.clothes.ClothesServiceImpl;
 
 
@@ -40,6 +43,15 @@ public class ClothesController {
     @DeleteMapping("/{id}")
     public void deleteColthes(@PathVariable(name = "id") UUID id){
         clothesService.deleteClothes(id);
+    }
+    @GetMapping("/")
+    public BasePage<ClothesAvatarView> getAllClothes(@RequestBody ApiListBaseRequest apiListBaseRequest){
+        return clothesService.getAll((apiListBaseRequest));
+    }
+
+    @GetMapping("/search")
+    public BasePage<ClothesAvatarView> search(@RequestBody ApiListBaseRequest apiListBaseRequest, SearchByKeyword searchByKeyword){
+        return clothesService.search(apiListBaseRequest, searchByKeyword);
     }
 }
 

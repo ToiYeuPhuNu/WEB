@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchByKeyword {
+public class SearchByKeyword extends ApiListBaseRequest {
     private String keyword;
 }

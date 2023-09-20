@@ -1,29 +1,33 @@
 package project.WebGioiThieuSanPham.service.clothes;
 
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
-import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
+import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
+import project.WebGioiThieuSanPham.dto.SearchByKeyword;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
+import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
-import project.WebGioiThieuSanPham.enums.Status;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Category;
 import project.WebGioiThieuSanPham.models.Clothes;
 import project.WebGioiThieuSanPham.repository.CategoryRepository;
 import project.WebGioiThieuSanPham.repository.ClothesRepository;
+import project.WebGioiThieuSanPham.service.category.CategoryServiceImpl;
+import project.WebGioiThieuSanPham.utils.FilterDataUtil;
+
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 @AllArgsConstructor
 @Service
@@ -31,6 +35,9 @@ public class ClothesServiceImpl implements ClothesService {
     private final ClothesRepository clothesRepository;
     private final ClothesMapper clothesMapper;
     private final CategoryRepository categoryRepository;
+    private final SearchUtil searchUtil= new SearchUtil();
+
+
 
     @Override
     public void deleteClothes(UUID id) {
@@ -44,32 +51,10 @@ public class ClothesServiceImpl implements ClothesService {
         return clothesMapper.ClothesToClothesDetail(clothes);
     }
 
-    @Override
-    public Page<ClothesAvatarView> getAllClothes(Optional<Integer> pageOptional) {
-        int size = 10;
-        int page = pageOptional.orElse(0);
-        Pageable pageable = PageRequest.of(page,size);
-        //lấy ds sp theo trang
-        Page<Clothes> clothesPage = clothesRepository.findAll(pageable);
-        //chuyển đổi trang sp clothes thành clothesAvatrView
-        Page<ClothesAvatarView> clothesAvatarsPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
-        return clothesAvatarsPage;
-    }
-
-    @Override
-    public Page<ClothesAvatarView> getClothesByCategory(UUID categoryId, Optional<Integer> pageOptional) {
-        int size = 10;
-        int page = pageOptional.orElse(0);
-        Pageable pageable = PageRequest.of(page, size);
-        //lấy ds sp theo trang và thể loại
-        Page<Clothes> clothesPage = clothesRepository.findByCategory(categoryId, pageable);
-        //chuyển đổi trang sp clothes thành clothesAvatrView
-        Page<ClothesAvatarView> clothesAvatarViewPage = clothesPage.map(clothesMapper::ClothesToClothesAvatar);
-        return clothesAvatarViewPage;
-    }
 
     @Override
     public ClothesResponse createClothes(ClothesRequest clothesRequest) {
+
             List<Object> nonEmptyFields = Arrays.asList(
                     clothesRequest.getName(),
                     clothesRequest.getSize(),
@@ -137,7 +122,60 @@ public class ClothesServiceImpl implements ClothesService {
         return clothesMapper.clothesToClothesResponse(existingClothes);
     }
 
+    public BasePage<ClothesAvatarView> search(ApiListBaseRequest apiListBaseRequest, SearchByKeyword searchRequest){
+        String keyword = searchRequest.getKeyword();
+        return this.map(searchUtil
+                .ilike(keyword, "name")
+                .build(searchRequest));
+    };
 
+    public BasePage<ClothesAvatarView> getAll(ApiListBaseRequest apiListBaseRequest){
+        Page<Clothes> page = clothesRepository.findAll(FilterDataUtil.buildPageRequest(apiListBaseRequest));
+
+        return this.map(page);
+
+    }
+    protected BasePage<ClothesAvatarView> map(Page<Clothes> page) {
+        BasePage<ClothesAvatarView> rPage = new BasePage<>();
+        rPage.setData(clothesMapper.toListDao(page.getContent()));
+        rPage.setTotalPage(page.getTotalPages());
+        rPage.setTotalRecord( page.getTotalElements());
+        rPage.setPage(page.getPageable().getPageNumber());
+        return rPage;
+    }
+    public class SearchUtil {
+        private final List<Specification<Clothes>> specifications = new ArrayList<>();
+        private final List<Predicate> tempPredicates = new ArrayList<>();
+        ClothesRepository repository = ClothesServiceImpl.this.clothesRepository;
+
+        public SearchUtil ilike(String keyword, String... fields) {
+            if (StringUtils.isNotBlank(keyword)) {
+                String finalKeyword = "%" + keyword.trim().toUpperCase() + "%";
+                specifications.add(
+                        (Specification<Clothes>) (root, query, criteriaBuilder) -> {
+                            for (String field : fields) {
+                                tempPredicates.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(field)), finalKeyword));
+                            }
+                            return criteriaBuilder.or(tempPredicates.toArray(Predicate[]::new));
+                        });
+                tempPredicates.clear();
+            }
+            return this;
+        }
+
+
+        public Page<Clothes> build(ApiListBaseRequest filter) {
+            Page<Clothes> data;
+            if (!specifications.isEmpty()) {
+                data = repository.findAll(specifications.stream().reduce(Specification::and).orElseThrow(),
+                        FilterDataUtil.buildPageRequest(filter));
+                specifications.clear();
+            } else {
+                data = repository.findAll(FilterDataUtil.buildPageRequest(filter));
+            }
+            return data;
+        }
+    }
 }
 
 

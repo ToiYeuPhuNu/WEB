@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClothesAvatarView extends BaseDto{
-    private UUID id;
     private String mainPath;
     private String name;
     private BigDecimal price;
