@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
 import project.WebGioiThieuSanPham.enums.Sex;
 import project.WebGioiThieuSanPham.enums.Size;
 import project.WebGioiThieuSanPham.enums.Status;
@@ -26,7 +27,7 @@ public class ClothesDetailView extends BaseDto {
     private Map<Size, Integer> size;
     private String name;
     private BigDecimal price;
-    private List<Category> categories;
+    private CategoryResponse categoryResponse;
     private String description;
     private Date releaseDate;
     private Status status;
