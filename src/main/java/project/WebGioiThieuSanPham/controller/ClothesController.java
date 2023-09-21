@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
 import project.WebGioiThieuSanPham.dto.SearchByKeyword;
-import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.request.ClothesRequest;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
@@ -29,7 +28,7 @@ public class ClothesController {
 
     ClothesServiceImpl clothesService;
 
-    @PostMapping("/")
+    @PostMapping("/add")
     public ClothesResponse createClothes(@RequestBody ClothesRequest clothesRequest) {
         return clothesService.createClothes(clothesRequest);
     }

@@ -54,7 +54,7 @@ public class Clothes{
     @ElementCollection
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
     @MapKeyColumn(name = "media_path")
-    List<String> MediaPath = new ArrayList<>();
+    private List<String> MediaPath = new ArrayList<>();
     }
 
 
