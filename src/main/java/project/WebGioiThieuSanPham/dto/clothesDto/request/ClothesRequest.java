@@ -31,5 +31,4 @@ public class ClothesRequest {
     private String status;
     private String mainPath;
     private CategoryRequest categoryRequest;
-    List<String> MediaPath;
 }

@@ -111,8 +111,7 @@ public class ClothesServiceImpl implements ClothesService {
                 clothesRequest.getDescription(),
                 clothesRequest.getReleaseDate(),
                 clothesRequest.getStatus(),
-                clothesRequest.getMainPath(),
-                clothesRequest.getMediaPath()
+                clothesRequest.getMainPath()
         ).anyMatch(field -> field == null || field.toString().trim().isEmpty());
     }
 
