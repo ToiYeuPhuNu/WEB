@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
@@ -18,6 +19,7 @@ import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesDetailView;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesResponse;
 import project.WebGioiThieuSanPham.enums.Sex;
+import project.WebGioiThieuSanPham.exception.MasterException;
 import project.WebGioiThieuSanPham.mapper.CategoryMapper;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Category;
@@ -47,7 +49,7 @@ public class ClothesServiceImpl implements ClothesService {
     public void deleteClothes(UUID id) {
         Objects.requireNonNull(id, "ID của Clothes không được null");
         Clothes clothes = clothesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Clothes với ID"));
+                .orElseThrow(() -> new MasterException(HttpStatus.NOT_FOUND,"Không tìm thấy Clothes với ID"));
         clothesRepository.delete(clothes);
     }
 
@@ -55,7 +57,7 @@ public class ClothesServiceImpl implements ClothesService {
     public ClothesDetailView getClothesById(UUID id) {
         Objects.requireNonNull(id, "ID của Clothes không được null");
         Clothes clothes = clothesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Clothes với ID"));
+                .orElseThrow(() -> new MasterException(HttpStatus.NOT_FOUND,"Không tìm thấy Clothes với ID"));
         return clothesMapper.ClothesToClothesDetail(clothes);
     }
 
@@ -64,7 +66,7 @@ public class ClothesServiceImpl implements ClothesService {
     public ClothesResponse createClothes(ClothesRequest clothesRequest) {
 
         if (isAnyFieldEmpty(clothesRequest)) {
-            throw new RuntimeException("Các trường không được để trống");
+            throw new MasterException(HttpStatus.BAD_REQUEST, "Các trường không được để trống");
         }
         Category existingCategory = handleCategory(clothesRequest);
 
@@ -77,7 +79,7 @@ public class ClothesServiceImpl implements ClothesService {
     public ClothesResponse updateClothes(UUID id,ClothesRequest clothesRequest) {
         Objects.requireNonNull(id, "ID của sản phẩm không được null.");
         if (isAnyFieldEmpty(clothesRequest)) {
-            throw new RuntimeException("Các trường không được để trống");
+            throw new MasterException(HttpStatus.BAD_REQUEST, "Các trường không được để trống");
         }
             Clothes existingClothes = clothesRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm quần áo với ID"));

@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import project.WebGioiThieuSanPham.dto.ApiListBaseRequest;
 import project.WebGioiThieuSanPham.dto.categoryDto.request.CategoryRequest;
 import project.WebGioiThieuSanPham.dto.categoryDto.response.CategoryResponse;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.BasePage;
 import project.WebGioiThieuSanPham.dto.clothesDto.response.ClothesAvatarView;
+import project.WebGioiThieuSanPham.exception.MasterException;
 import project.WebGioiThieuSanPham.mapper.CategoryMapper;
 import project.WebGioiThieuSanPham.mapper.ClothesMapper;
 import project.WebGioiThieuSanPham.models.Category;
@@ -39,12 +41,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getName();
-        if (StringUtils.isBlank(categoryName)) {
-            throw new RuntimeException("Tên danh mục không hợp lệ!");
-        }
         Category existingCategory = categoryRepository.findByName(categoryName);
         if (existingCategory != null){
-            throw new RuntimeException("Danh mục đã tồn tại!");
+            throw new MasterException(HttpStatus.CONFLICT ,"Danh mục đã tồn tại!");
+        }
+        if (StringUtils.isBlank(categoryName)) {
+            throw new MasterException(HttpStatus.BAD_REQUEST, "Tên danh mục không hợp lệ!");
         }
         Category newCategory = categoryMapper.categoryRequestToCategory(categoryRequest);
         categoryRepository.save(newCategory);
@@ -63,10 +65,10 @@ public class CategoryServiceImpl implements CategoryService {
         Objects.requireNonNull(categoryId, "ID của danh mục không được null.");
         //kiểm tra xem danh mục có tồn tại hay không
         Optional<Category> existingCategoryOptional = categoryRepository.findById(categoryId);
-        Category existingCategory = existingCategoryOptional.orElseThrow(()-> new RuntimeException("Danh mục không tồn tại!"));
+        Category existingCategory = existingCategoryOptional.orElseThrow(()-> new MasterException(HttpStatus.NOT_FOUND,"Danh mục không tồn tại!"));
         String newName = updateCategoryRequest.getName();
         if (StringUtils.isBlank(newName)){
-            throw new RuntimeException("Tên không hợp lệ!");
+            throw new MasterException(HttpStatus.BAD_REQUEST, "Tên không hợp lệ!");
         }
         existingCategory.setName(newName);
         categoryRepository.save(existingCategory);
@@ -78,12 +80,12 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(UUID categoryId) {
         Objects.requireNonNull(categoryId, "ID của danh mục không được null!");
         if(!categoryRepository.existsById(categoryId)){
-                throw new RuntimeException("Danh mục không tồn tại ");
+                throw new MasterException(HttpStatus.NOT_FOUND,"Danh mục không tồn tại ");
         }
         categoryRepository.deleteById(categoryId);
     }
     public BasePage<ClothesAvatarView> getClothesByCategory(ApiListBaseRequest apiListBaseRequest, UUID id){
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new MasterException(HttpStatus.NOT_FOUND, "Danh mục không tồn tại"));
         Page<Clothes> page = searchUtil.findClothesByCategory(category)
                 .build(apiListBaseRequest);
         return this.map(page);

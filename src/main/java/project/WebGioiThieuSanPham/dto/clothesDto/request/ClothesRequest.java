@@ -24,12 +24,12 @@ import java.util.*;
 public class ClothesRequest {
     private String name;
     private Sex sex;
-    private Map<Size, Integer> sizesStock = new HashMap<>();
+    private Map<Size, Integer> sizesStock;
     private BigDecimal price;
     private String description;
     private Date releaseDate;
     private String status;
     private String mainPath;
     private CategoryRequest categoryRequest;
-    List<String> MediaPath = new ArrayList<>();
+    List<String> MediaPath;
 }

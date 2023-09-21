@@ -1,19 +1,20 @@
 package project.WebGioiThieuSanPham.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class MasterException extends RuntimeException {
-    protected final ExceptionCode exceptionCode;
+    protected final HttpStatus exceptionCode;
     protected final String detailMessage;
 
-    public MasterException(String message, ExceptionCode exceptionCode) {
+    public MasterException(HttpStatus exceptionCode, String message) {
         this.detailMessage = message;
         this.exceptionCode = exceptionCode;
     }
 
     @Override
     public String toString() {
-        return exceptionCode.getDetail() + ": " + detailMessage;
+        return exceptionCode.toString() + ": " + detailMessage;
     }
 }

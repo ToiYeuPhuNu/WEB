@@ -28,5 +28,5 @@ public class ClothesResponse {
     private Status status;
     private String mainPath;
     private CategoryResponse categoryResponse;
-    private List<String> MediaPath = new ArrayList<>();
+    List<String> MediaPath = new ArrayList<>();
 }
