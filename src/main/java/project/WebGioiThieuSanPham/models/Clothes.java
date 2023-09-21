@@ -53,8 +53,8 @@ public class Clothes{
     private Category category;
     @ElementCollection
     @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
-    @MapKeyColumn(name = "media_path")
-    private List<String> MediaPath = new ArrayList<>();
+    @MapKeyColumn(name = "media")
+    List<String> MediaPath = new ArrayList<>();
     }
 
 
