@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,5 +27,5 @@ public class Category{
     @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
-    private List<Clothes> clothes;
+    private List<Clothes> clothes = new ArrayList<>();
 }

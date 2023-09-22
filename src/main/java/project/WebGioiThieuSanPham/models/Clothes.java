@@ -51,10 +51,9 @@ public class Clothes{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @ElementCollection
-    @CollectionTable(name = "media_path", joinColumns = @JoinColumn(name = "clothes_id"))
-    @MapKeyColumn(name = "media")
-    List<String> MediaPath = new ArrayList<>();
+    @OneToMany(mappedBy = "clothes", cascade = CascadeType.MERGE)
+    private List<Image> images = new ArrayList<>();
+
     }
 
 
